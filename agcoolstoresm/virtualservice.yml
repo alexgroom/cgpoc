@@ -18,3 +18,25 @@ spec:
         port:
           number: 8080
         host: gateway
+---
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: inventory-virtual
+  namespace: agcoolstoresm
+spec:
+  hosts:
+    - inventory
+  http:
+    - route:
+        - destination:
+            host: inventory-dotnet
+            port:
+              number: 8080
+          weight: 50
+        - destination:
+            host: inventory
+            port:
+              number: 8080
+          weight: 50
+
