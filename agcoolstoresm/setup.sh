@@ -60,9 +60,9 @@ oc create -f virtualservice.yml
 #
 # Patch the inventory and dotnet services selector to work nicely with mesh, removing all the extra labels added by new-app
 #
-oc patch svc/inventory -patch '{"spec": {"selector": null }}'
+oc patch svc/inventory --patch '{"spec": {"selector": null }}'
 oc patch svc/inventory --patch '{"spec": {"selector": {"app": "inventory"}}}}'
-oc patch svc/inventory-dotnet -patch '{"spec": {"selector": null }}'
+oc patch svc/inventory-dotnet --patch '{"spec": {"selector": null }}'
 oc patch svc/inventory-dotnet --patch '{"spec": {"selector": {"app": "inventory-dotnet"}}}}'
 #
 # Tell the web server the new gateway location
