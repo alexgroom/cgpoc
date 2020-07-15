@@ -66,8 +66,8 @@ oc patch svc/inventory-dotnet --patch '{"spec": {"selector": null }}'
 oc patch svc/inventory-dotnet --patch '{"spec": {"selector": {"app": "inventory-dotnet"}}}}'
 #
 # Tell the web server the new gateway location
-#oc set env dc/web COOLSTORE_GW_ENDPOINT=http://istio-ingressgateway-istio-system.apps.gitoc4ga.itaas.s2-eu.capgemini.com/agcoolstoresm
-oc set env dc/web COOLSTORE_GW_ENDPOINT=http://istio-ingressgateway-istio-system.apps.cluster-alton-1f57.alton-1f57.example.opentlc.com/agcoolstoresm
+oc set env dc/web COOLSTORE_GW_ENDPOINT=http://istio-ingressgateway-istio-system.apps.gitoc4ga.itaas.s2-eu.capgemini.com/agcoolstoresm
+#oc set env dc/web COOLSTORE_GW_ENDPOINT=http://istio-ingressgateway-istio-system.apps.cluster-alton-1f57.alton-1f57.example.opentlc.com/agcoolstoresm
 oc rollout latest dc/web
 #
 # Test the new ingress curl http://istio-ingressgateway-istio-system.apps.gitoc4ga.itaas.s2-eu.capgemini.com/agcoolstoresm/api/products
