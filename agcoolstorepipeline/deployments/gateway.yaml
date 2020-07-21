@@ -1,0 +1,65 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: gateway
+        app.kubernetes.io/component: gateway
+        app.kubernetes.io/instance: gateway 
+        app.kubernetes.io/name: java 
+        app.kubernetes.io/part-of: coolstore 
+        app.openshift.io/runtime: java 
+        app.openshift.io/runtime-version: '11'     
+    spec:
+      containers:
+        - name: gateway
+          image: image-registry.openshift-image-registry.svc:5000/agcoolstorepipeline/gateway
+          ports:
+            - name: http-server
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: COMPONENT_CATALOG_HOST
+              value: catalog
+            - name: COMPONENT_INVENTORY_HOST
+              value: inventory
+            - name: COMPONENT_CATALOG_PORT
+              value: '8080'
+            - name: COMPONENT_INVENTORY_PORT
+              value: '8080'
+          resources: {}
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: gateway
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: gateway
+spec:
+  to:
+    kind: Service
+    name: gateway

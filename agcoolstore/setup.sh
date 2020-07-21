@@ -2,7 +2,9 @@
 #oc new-project agcoolstore
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  -l app.openshift.io/runtime=java
 oc expose svc catalog
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=java
+#
+# Take the maria branch of inventory simce it support db access
+oc new-app java:11~https://github.com/alexgroom/cnw3.git#maria --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=java
 oc expose svc inventory
 # create gateway and apply environment variables
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway \
@@ -20,5 +22,32 @@ oc label dc catalog app.kubernetes.io/part-of=coolstore
 oc label dc inventory app.kubernetes.io/part-of=coolstore
 oc label dc web app.kubernetes.io/part-of=coolstore
 oc label dc inventory-dotnet app.kubernetes.io/part-of=coolstore
-# add databases components
+# add databases components for inventory and catalog
+oc new-app mariadb-ephemeral \
+    --param=DATABASE_SERVICE_NAME=inventory-mariadb \
+    --param=MYSQL_DATABASE=inventorydb \
+    --param=MYSQL_USER=inventory \
+    --param=MYSQL_PASSWORD=inventory \
+    --labels=app=inventory
+#
+oc new-app postgresql-ephemeral \
+    --param=DATABASE_SERVICE_NAME=catalog-postgresql \
+    --param=POSTGRESQL_DATABASE=catalogdb \
+    --param=POSTGRESQL_USER=catalog \
+    --param=POSTGRESQL_PASSWORD=catalog \
+    --labels=app=catalog
 # modift config maps
+cat <<EOF > catalog-application.properties
+spring.datasource.url=jdbc:postgresql://catalog-postgresql:5432/catalogdb
+spring.datasource.username=catalog
+spring.datasource.password=catalog
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.hibernate.ddl-auto=create
+EOF
+oc create configmap catalog --from-file=catalog-application.properties
+#
+# enable service account to allow Spring to access the config map
+oc policy add-role-to-user view system:serviceaccount:agcoolstore:default
+#
+#
+
