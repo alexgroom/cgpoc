@@ -5,8 +5,9 @@
 # Install kiali into that project
 # Install Service Mesh Operator into istio-system
 # Create Control plane and Member roll
-#oc new-project agcoolstoresm
-# Manually Add agcoolstoresm into Service Mesh member roll
+oc new-project agcoolstoresm
+##############
+# PLEASE manually Add agcoolstoresm into Service Mesh member roll
 #
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog \
 	 -l app=catalog,app.kubernetes.io/part-of=coolstore
