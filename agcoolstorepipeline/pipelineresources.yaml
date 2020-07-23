@@ -1,0 +1,44 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: inventory-image
+  namespace: agcoolstorepipeline
+spec:
+  params:
+    - name: url
+      value: 'image-registry.openshift-image-registry.svc:5000/agcoolstorepipeline/inventory'
+  type: image
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: gateway-image
+  namespace: agcoolstorepipeline
+spec:
+  params:
+    - name: url
+      value: 'image-registry.openshift-image-registry.svc:5000/agcoolstorepipeline/gateway'
+  type: image
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: web-image
+  namespace: agcoolstorepipeline
+spec:
+  params:
+    - name: url
+      value: 'image-registry.openshift-image-registry.svc:5000/agcoolstorepipeline/web'
+  type: image
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: catalog-image
+  namespace: agcoolstorepipeline
+spec:
+  params:
+    - name: url
+      value: 'image-registry.openshift-image-registry.svc:5000/agcoolstorepipeline/catalog'
+  type: image
+
