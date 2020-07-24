@@ -18,16 +18,6 @@ spec:
         port:
           number: 8080
         host: gateway
-  - match:
-    - uri:
-        prefix: /
-    rewrite:
-      uri: /
-    route:
-    - destination:
-        host: web
-        port:
-          number: 8080
 ---
 kind: VirtualService
 apiVersion: networking.istio.io/v1alpha3
