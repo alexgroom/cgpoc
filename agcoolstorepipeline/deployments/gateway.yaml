@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: image-registry.openshift-image-registry.svc:5000/agcoolstorepipeline/gateway
+          image: image-registry.openshift-image-registry.svc:5000/agcoolstorepipeline/gateway:latest
           ports:
             - name: http-server
               containerPort: 8080
