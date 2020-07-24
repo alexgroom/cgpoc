@@ -1,4 +1,5 @@
 # monitoring configuration
+oc project agcoolstoresm
 # Create a config map
 oc create configmap prom --from-file=prometheus.yml
 #
@@ -8,4 +9,4 @@ oc expose svc/prometheus
 #
 # Mount the map into the container 
 oc set volume dc/prometheus --add -t configmap --configmap-name=prom -m /etc/prometheus/prometheus.yml --sub-path=prometheus.yml
-oc rollout status -w deployment/prometheus
+oc rollout status -w dc/prometheus
