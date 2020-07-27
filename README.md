@@ -1,6 +1,3 @@
----
-title: 'PoC Demos'
----
 
 PoC Demos
 ===
