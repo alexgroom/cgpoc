@@ -68,15 +68,15 @@ This presents a configuration template for the build. Most of the values have be
 
 On subsequent runs, use `Start last Run` to avoid having to enter the same information.
 
-![](https://i.imgur.com/ynUydfe.png)
+![](https://github.com/alexgroom/cgpoc/blob/master/images/startpipeline.png)
 
 On completion the run should show all aspects are green.
 
-![](https://i.imgur.com/w1F582e.png)
+![](https://github.com/alexgroom/cgpoc/blob/master/images/pipelinerun.png)
 
 The web UI components should be accessable from the Topology view and the web URL.
 
-![](https://i.imgur.com/Gk4JT7Q.png)
+![](https://github.com/alexgroom/cgpoc/blob/master/images/webrun.png)
 
 
 ## Scripted Pipeline run
