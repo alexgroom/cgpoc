@@ -1,0 +1,15 @@
+FROM registry.redhat.io/codeready-workspaces/stacks-php-rhel8
+USER root
+RUN curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/mssql-release.repo
+RUN yum search odbc
+RUN yum search msodbcsql17
+ENV ACCEPT_EULA=Y
+RUN yum install -y unixODBC unixODBC-devel
+RUN yum download -y msodbcsql17
+RUN rpm -Uvh --nodeps msodbcsql17*rpm
+RUN yum install -y mssql-tools
+USER jboss
+ENV PATH=${PATH}:/opt/mssql-tools/bin
+ENTRYPOINT ["/home/jboss/entrypoint.sh"]
+WORKDIR /projects
+CMD tail -f /dev/null
