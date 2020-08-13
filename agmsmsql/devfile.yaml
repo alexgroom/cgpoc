@@ -1,0 +1,65 @@
+metadata:
+  name: php-di-hmiw2
+projects:
+  - name: php-di
+    source:
+      location: >-
+        https://devfile-registry-codeready.apps.cluster-alton-3056.alton-3056.example.opentlc.com/resources/php-di-php-di-master.zip
+      type: zip
+components:
+  - id: redhat/php/latest
+    memoryLimit: 1Gi
+    type: chePlugin
+  - id: redhat/php-debugger/latest
+    memoryLimit: 256Mi
+    type: chePlugin
+  - mountSources: true
+    endpoints:
+      - name: 8080-tcp
+        port: 8000
+    memoryLimit: 512Mi
+    type: dockerimage
+    volumes:
+      - name: composer
+        containerPath: /home/jboss/.composer
+    alias: php
+    image: 'quay.io/agroom/phpsqlstack:latest'
+apiVersion: 1.0.0
+commands:
+  - name: Install dependencies (with composer)
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/php-di'
+        type: exec
+        command: composer install
+        component: php
+  - name: Run web application
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/php-di'
+        type: exec
+        command: 'php -S 0.0.0.0:8000 -t web/'
+        component: php
+  - name: Run CLI application
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/php-di'
+        type: exec
+        command: php console.php
+        component: php
+  - name: Debug current file
+    actions:
+      - referenceContent: |
+          {
+            "version": "0.2.0",
+            "configurations": [
+              {
+                "name": "Launch currently open script",
+                "type": "php",
+                "request": "launch",
+                "program": "${file}",
+                "stopOnEntry": true,
+                "cwd": "${fileDirname}",
+                "port": 9000,
+                "runtimeExecutable": "php"
+              }
+            ]
+          }
+        type: vscode-launch
