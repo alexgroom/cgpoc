@@ -5,7 +5,7 @@ oc project agcoolstoresm
 oc create configmap prom --from-file=prometheus.yml
 #
 # Create a new instance of Prometheus
-oc new-app prom/prometheus --name prometheus
+oc new-app prom/prometheus --name prometheus --as-deployment-config
 oc expose svc/prometheus
 #
 # Mount the map into the container 
@@ -14,6 +14,6 @@ oc rollout status -w dc/prometheus
 #
 # Add Grafana (credentials: admin/admin)
 #
-oc new-app grafana/grafana --name grafana
+oc new-app grafana/grafana --name grafana --as-deployment-config
 oc expose svc/grafana
 

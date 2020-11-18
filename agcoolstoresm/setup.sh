@@ -10,20 +10,20 @@ oc new-project agcoolstoresm
 # PLEASE manually Add agcoolstoresm into Service Mesh member roll
 #
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog \
-	 -l app=catalog,app.kubernetes.io/part-of=coolstore
+	 -l app=catalog,app.kubernetes.io/part-of=coolstore --as-deployment-config
 #
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  \
-	-l app=inventory,app.kubernetes.io/part-of=coolstore
+	-l app=inventory,app.kubernetes.io/part-of=coolstore --as-deployment-config
 # create gateway and apply environment variables
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway \
-   -l app=gateway,app.kubernetes.io/part-of=coolstore \
+   -l app=gateway,app.kubernetes.io/part-of=coolstore --as-deployment-config\
   -e COMPONENT_CATALOG_HOST=catalog -e COMPONENT_INVENTORY_HOST=inventory -e COMPONENT_CATALOG_PORT=8080 -e COMPONENT_INVENTORY_PORT=8080
 #
 oc new-app https://github.com/alexgroom/cnw3.git --context-dir=web-nodejs --name=web \
-	-l app=web,app.kubernetes.io/part-of=coolstore
+	-l app=web,app.kubernetes.io/part-of=coolstore --as-deployment-config
 #
 oc new-app dotnet:2.1~https://github.com/alexgroom/inventory-api-1st-dotnet.git#dotnet2.1 --context-dir=src/Coolstore.Inventory --name=inventory-dotnet \
-  -l app=inventory-dotnet,app.kubernetes.io/part-of=coolstore,version=dotnet
+  -l app=inventory-dotnet,app.kubernetes.io/part-of=coolstore,version=dotnet --as-deployment-config
 # configure dev console labels
 oc label dc gateway app.openshift.io/runtime=java
 oc label dc catalog app.openshift.io/runtime=java
