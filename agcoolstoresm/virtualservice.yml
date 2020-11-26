@@ -1,4 +1,4 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: gateway-agcoolstoresm
@@ -20,10 +20,9 @@ spec:
         host: gateway
 ---
 kind: VirtualService
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 metadata:
   name: inventory-virtual
-  namespace: agcoolstoresm
 spec:
   hosts:
     - inventory

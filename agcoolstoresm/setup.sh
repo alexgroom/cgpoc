@@ -36,6 +36,21 @@ oc label dc catalog maistra.io/expose-route=true
 oc label dc inventory maistra.io/expose-route=true
 oc label dc web maistra.io/expose-route=true
 oc label dc inventory-dotnet maistra.io/expose-route=true
+#
+# Patch the inventory and dotnet services selector to work nicely with mesh, removing all the extra labels added by new-app
+#
+oc patch svc/inventory --patch '{"spec": {"selector": null }}'
+oc patch svc/inventory --patch '{"spec": {"selector": {"app": "inventory"}}}}'
+oc patch svc/inventory-dotnet --patch '{"spec": {"selector": null }}'
+oc patch svc/inventory-dotnet --patch '{"spec": {"selector": {"app": "inventory-dotnet"}}}}'
+#
+# Align the port names according to the service mesh Gateway
+#
+oc patch svc/inventory --patch '{"spec": { "ports": [{ "name":"http", "port":8080}]}}'
+oc patch svc/inventory-dotnet --patch '{"spec": { "ports": [{ "name":"http", "port":8080}]}}'
+oc patch svc/catalog --patch '{"spec": { "ports": [{ "name":"http", "port":8080}]}}'
+oc patch svc/gateway --patch '{"spec": { "ports": [{ "name":"http", "port":8080}]}}'
+
 # expose routes
 oc expose svc gateway
 oc expose svc inventory
@@ -59,18 +74,8 @@ oc rollout latest dc/inventory-dotnet
 oc create -f istio-gateway.yml
 oc create -f virtualservice.yml
 #
-# Patch the inventory and dotnet services selector to work nicely with mesh, removing all the extra labels added by new-app
-#
-oc patch svc/inventory --patch '{"spec": {"selector": null }}'
-oc patch svc/inventory --patch '{"spec": {"selector": {"app": "inventory"}}}}'
-oc patch svc/inventory-dotnet --patch '{"spec": {"selector": null }}'
-oc patch svc/inventory-dotnet --patch '{"spec": {"selector": {"app": "inventory-dotnet"}}}}'
-#
 # Tell the web server the new gateway location
-oc set env dc/web COOLSTORE_GW_ENDPOINT=http://istio-ingressgateway-istio-system.apps.gitoc4ga.itaas.s2-eu.capgemini.com/agcoolstoresm
-#oc set env dc/web COOLSTORE_GW_ENDPOINT=http://istio-ingressgateway-istio-system.apps.cluster-alton-1f57.alton-1f57.example.opentlc.com/agcoolstoresm
+export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')
+oc set env dc/web COOLSTORE_GW_ENDPOINT=http://$GATEWAY_URL/agcoolstoresm
 oc rollout latest dc/web
-#
-# Test the new ingress curl http://istio-ingressgateway-istio-system.apps.gitoc4ga.itaas.s2-eu.capgemini.com/agcoolstoresm/api/products
-#
 
