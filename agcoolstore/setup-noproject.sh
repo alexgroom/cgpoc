@@ -1,13 +1,13 @@
 # script to install agcoolstore components
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  -l app.openshift.io/runtime=java --as-deployment-config
+oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  -l app.openshift.io/runtime=spring --as-deployment-config
 oc expose svc catalog
 #
 # Take the maria branch of inventory simce it support db access
-oc new-app java:11~https://github.com/alexgroom/cnw3.git#maria --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=java --as-deployment-config
+oc new-app java:11~https://github.com/alexgroom/cnw3.git#maria --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=quarkus --as-deployment-config
 oc expose svc inventory
 # create gateway and apply environment variables
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway --as-deployment-config\
-   -l app.openshift.io/runtime=java \
+   -l app.openshift.io/runtime=vertx \
   -e COMPONENT_CATALOG_HOST=catalog -e COMPONENT_INVENTORY_HOST=inventory -e COMPONENT_CATALOG_PORT=8080 -e COMPONENT_INVENTORY_PORT=8080
 oc expose svc gateway
 oc new-app https://github.com/alexgroom/cnw3.git --context-dir=web-nodejs --name=web -l app.openshift.io/runtime=nodejs --as-deployment-config
@@ -28,6 +28,7 @@ oc new-app mariadb-ephemeral \
     --param=MYSQL_USER=inventory \
     --param=MYSQL_PASSWORD=inventory \
     --labels=app=inventory \
+    --labels=app.openshift.io/runtime=mariadb \
     --as-deployment-config
 #
 oc new-app postgresql-ephemeral \
@@ -36,6 +37,7 @@ oc new-app postgresql-ephemeral \
     --param=POSTGRESQL_USER=catalog \
     --param=POSTGRESQL_PASSWORD=catalog \
     --labels=app=catalog \
+    --labels=app.openshift.io/runtime=postgresql \
     --as-deployment-config
 # modift config maps
 cat <<EOF > catalog-application.properties

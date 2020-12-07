@@ -25,9 +25,9 @@ oc new-app https://github.com/alexgroom/cnw3.git --context-dir=web-nodejs --name
 oc new-app dotnet:2.1~https://github.com/alexgroom/inventory-api-1st-dotnet.git#dotnet2.1 --context-dir=src/Coolstore.Inventory --name=inventory-dotnet \
   -l app=inventory-dotnet,app.kubernetes.io/part-of=coolstore,version=dotnet --as-deployment-config
 # configure dev console labels
-oc label dc gateway app.openshift.io/runtime=java
-oc label dc catalog app.openshift.io/runtime=java
-oc label dc inventory app.openshift.io/runtime=java
+oc label dc gateway app.openshift.io/runtime=vertx
+oc label dc catalog app.openshift.io/runtime=spring
+oc label dc inventory app.openshift.io/runtime=quarkus
 oc label dc web app.openshift.io/runtime=nodejs
 oc label dc inventory-dotnet app.openshift.io/runtime=dotnet
 # configure service mesh route labels
@@ -57,6 +57,7 @@ oc expose svc inventory
 oc expose svc catalog
 oc expose svc inventory-dotnet
 oc expose svc web
+sleep 30
 # Patch the components to run with sidecar
 oc patch dc/catalog --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
 oc patch dc/catalog --patch '{"spec": {"template": {"spec": {"containers": [{"name": "catalog", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}'
@@ -75,6 +76,7 @@ oc create -f istio-gateway.yml
 oc create -f virtualservice.yml
 #
 # Tell the web server the new gateway location
+sleep 10
 export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')
 oc set env dc/web COOLSTORE_GW_ENDPOINT=http://$GATEWAY_URL/agcoolstoresm
 oc rollout latest dc/web
