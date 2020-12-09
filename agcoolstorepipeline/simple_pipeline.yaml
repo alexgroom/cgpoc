@@ -46,7 +46,7 @@ spec:
             resource: web-image
       taskRef:
         kind: ClusterTask
-        name: s2i-nodejs
+        name: s2i-nodejs-pr
     - name: web-deploy
       params:
         - name: SCRIPT
@@ -86,7 +86,7 @@ spec:
             resource: gateway-image
       taskRef:
         kind: ClusterTask
-        name: s2i-java-11
+        name: s2i-java-11-pr
     - name: gateway-deploy
       params:
         - name: SCRIPT
@@ -126,7 +126,7 @@ spec:
             resource: catalog-image
       taskRef:
         kind: ClusterTask
-        name: s2i-java-11
+        name: s2i-java-11-pr
     - name: catalog-deploy
       params:
         - name: SCRIPT
@@ -166,7 +166,7 @@ spec:
             resource: inventory-image
       taskRef:
         kind: ClusterTask
-        name: s2i-java-11
+        name: s2i-java-11-pr
     - name: inventory-deploy
       params:
         - name: SCRIPT
