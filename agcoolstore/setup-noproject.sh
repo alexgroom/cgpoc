@@ -12,7 +12,7 @@ oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-v
 oc expose svc gateway
 oc new-app https://github.com/alexgroom/cnw3.git --context-dir=web-nodejs --name=web -l app.openshift.io/runtime=nodejs --as-deployment-config
 oc expose svc web
-oc new-app dotnet:2.1~https://github.com/alexgroom/inventory-api-1st-dotnet.git#dotnet2.1 --context-dir=src/Coolstore.Inventory --name=inventory-dotnet \
+oc new-app dotnet:3.1~https://github.com/alexgroom/inventory-api-1st-dotnet.git --context-dir=src/Coolstore.Inventory --name=inventory-dotnet \
   -l app.openshift.io/runtime=dotnet --as-deployment-config
 oc expose svc inventory-dotnet
 # Add component labels to group services
