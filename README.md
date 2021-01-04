@@ -2,7 +2,7 @@
 PoC Demos
 ===
 ## Introduction
-This repo contains a collection of OpenShift runtime demos. Most of these are based around the **Coolstore** retail web site demo used frequenlty elsewhere in Red Hat.
+This repo contains a collection of OpenShift runtime demos. Most of these are based around the **Coolstore** retail web site demo used frequently elsewhere in Red Hat.
 
 ![](https://raw.githubusercontent.com/alexgroom/cgpoc/master/images/coolstore.png)
 
