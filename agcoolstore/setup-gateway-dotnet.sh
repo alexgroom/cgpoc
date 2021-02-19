@@ -1,5 +1,4 @@
 # script to install agcoolstore components
-oc project agcoolstore
 oc delete all --selector app=gateway
 # create gateway and apply environment variables
 oc new-app dotnet:3.1~https://github.com/alexgroom/cnw3.git --context-dir=gateway-dotnet --name=gateway --as-deployment-config\
