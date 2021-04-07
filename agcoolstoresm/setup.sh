@@ -31,11 +31,11 @@ oc label dc inventory app.openshift.io/runtime=quarkus
 oc label dc web app.openshift.io/runtime=nodejs
 oc label dc inventory-dotnet app.openshift.io/runtime=dotnet
 # configure service mesh route labels
-oc label dc gateway maistra.io/expose-route=true
-oc label dc catalog maistra.io/expose-route=true
-oc label dc inventory maistra.io/expose-route=true
-oc label dc web maistra.io/expose-route=true
-oc label dc inventory-dotnet maistra.io/expose-route=true
+oc patch dc gateway -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}' 
+oc patch dc catalog -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
+oc patch dc inventory -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
+oc patch dc web -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
+oc patch dc inventory-dotnet -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 #
 # Patch the inventory and dotnet services selector to work nicely with mesh, removing all the extra labels added by new-app
 #
