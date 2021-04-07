@@ -16,6 +16,8 @@ echo "Using project:" $SERVERLESS_PROJECT
 #
 # Remove the old webUI dc
 oc delete dc/web
+oc delete svc/web
+oc delete route web
 #
 # add web UI using the same image as was built for normal coolstore
 kn service create web --image=image-registry.openshift-image-registry.svc:5000/$SERVERLESS_PROJECT/web \
