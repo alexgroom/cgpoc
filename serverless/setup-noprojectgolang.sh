@@ -18,3 +18,6 @@ kn service create catalog-go --image=image-registry.openshift-image-registry.svc
 kn service update gateway --env COMPONENT_CATALOG_HOST=catalog-go.$SERVERLESS_PROJECT.svc.cluster.local 
 # add trigger
 kn trigger create events-trigger4 --filter type=web-wakeup --sink ksvc:catalog-go
+#
+# delete the old catalog service
+kn service delete catalog
