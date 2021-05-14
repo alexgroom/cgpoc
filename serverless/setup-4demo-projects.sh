@@ -19,4 +19,4 @@ kn service create web --image=image-registry.openshift-image-registry.svc:5000/a
 # Now add eventing
 ./setup-eventing.sh agcoolserve2
 # add the enhanced project components
-./setup_coolserve4.sh agcoolserve3
+./setup-coolserv4.sh agcoolserve3

@@ -1,0 +1,38 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: faas
+  labels:
+    boson.dev/function: 'true'
+    boson.dev/runtime: go
+spec:
+  template:
+    metadata:
+    spec:
+      containerConcurrency: 0
+      containers:
+        - env:
+            - name: ITEM
+              value: web-
+            - name: SEARCH
+              value: 'Created pod:'
+            - name: VERBOSE
+              value: 'true'
+          image: 'quay.io/agroom/coolstorefaas:latest'
+          livenessProbe:
+            httpGet:
+              path: /health/liveness
+              port: 0
+          name: user-container
+          readinessProbe:
+            httpGet:
+              path: /health/readiness
+              port: 0
+            successThreshold: 1
+          resources: {}
+      enableServiceLinks: false
+      timeoutSeconds: 300
+  traffic:
+    - latestRevision: true
+      percent: 100
+
