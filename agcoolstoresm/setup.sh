@@ -23,7 +23,7 @@ oc new-app https://github.com/alexgroom/cnw3.git --context-dir=web-nodejs --name
 	-l app=web,app.kubernetes.io/part-of=coolstore --as-deployment-config
 #
 oc new-app dotnet:3.1~https://github.com/alexgroom/inventory-api-1st-dotnet.git --context-dir=src/Coolstore.Inventory --name=inventory-dotnet \
-  -l app=inventory-dotnet,app.kubernetes.io/part-of=coolstore,version=dotnet --as-deployment-config
+  -l app=inventory-dotnet,app.kubernetes.io/part-of=coolstore --as-deployment-config
 # configure dev console labels
 oc label dc gateway app.openshift.io/runtime=vertx
 oc label dc catalog app.openshift.io/runtime=spring
@@ -35,14 +35,7 @@ oc patch dc gateway -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/e
 oc patch dc catalog -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 oc patch dc inventory -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 oc patch dc inventory-dotnet -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
-#
-# Patch the inventory and dotnet services selector to work nicely with mesh, removing all the extra labels added by new-app
-#
-oc patch svc/inventory --patch '{"spec": {"selector": null }}'
-oc patch svc/inventory --patch '{"spec": {"selector": {"app": "inventory"}}}}'
-oc patch svc/inventory-dotnet --patch '{"spec": {"selector": null }}'
-oc patch svc/inventory-dotnet --patch '{"spec": {"selector": {"app": "inventory-dotnet"}}}}'
-#
+##
 # Align the port names according to the service mesh Gateway
 #
 oc patch svc/inventory --patch '{"spec": { "ports": [{ "name":"http", "port":8080}]}}'
@@ -59,13 +52,13 @@ oc expose svc web
 sleep 30
 # Patch the components to run with sidecar
 oc patch dc/catalog --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
-oc patch dc/catalog --patch '{"spec": {"template": {"spec": {"containers": [{"name": "catalog", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}'
+#oc patch dc/catalog --patch '{"spec": {"template": {"spec": {"containers": [{"name": "catalog", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}'
 oc rollout latest dc/catalog
 oc patch dc/gateway --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
-oc patch dc/gateway --patch '{"spec": {"template": {"spec": {"containers": [{"name": "gateway", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}' 
+#oc patch dc/gateway --patch '{"spec": {"template": {"spec": {"containers": [{"name": "gateway", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}' 
 oc rollout latest dc/gateway 
 oc patch dc/inventory --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
-oc patch dc/inventory --patch '{"spec": {"template": {"spec": {"containers": [{"name": "inventory", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}'
+#oc patch dc/inventory --patch '{"spec": {"template": {"spec": {"containers": [{"name": "inventory", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}'
 oc rollout latest dc/inventory
 oc patch dc/inventory-dotnet --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
 oc rollout latest dc/inventory-dotnet
