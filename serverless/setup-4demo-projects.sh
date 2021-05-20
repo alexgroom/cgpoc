@@ -2,7 +2,7 @@
 # ADd agcoolstore0
 #
 oc new-project agcoolserve0
-../agcoolstore/setup.sh
+../agcoolstore/setup-noproject.sh
 ../agcoolstore/setup-gateway-dotnet.sh
 #
 # Remove the old webUI dc

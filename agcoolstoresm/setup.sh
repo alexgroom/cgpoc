@@ -30,11 +30,10 @@ oc label dc catalog app.openshift.io/runtime=spring
 oc label dc inventory app.openshift.io/runtime=quarkus
 oc label dc web app.openshift.io/runtime=nodejs
 oc label dc inventory-dotnet app.openshift.io/runtime=dotnet
-# configure service mesh route labels
+# configure service mesh route labels - note that web is not part of the mesh
 oc patch dc gateway -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}' 
 oc patch dc catalog -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 oc patch dc inventory -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
-oc patch dc web -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 oc patch dc inventory-dotnet -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 #
 # Patch the inventory and dotnet services selector to work nicely with mesh, removing all the extra labels added by new-app
@@ -68,7 +67,6 @@ oc rollout latest dc/gateway
 oc patch dc/inventory --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
 oc patch dc/inventory --patch '{"spec": {"template": {"spec": {"containers": [{"name": "inventory", "command" : ["/bin/bash"], "args": ["-c", "until $(curl -o /dev/null -s -I -f http://127.0.0.1:15000); do echo \"Waiting for Istio Sidecar...\"; sleep 1; done; sleep 10; /usr/local/s2i/run"]}]}}}}'
 oc rollout latest dc/inventory
-oc patch dc/web --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
 oc patch dc/inventory-dotnet --patch '{"spec": {"template": {"metadata": {"annotations": {"sidecar.istio.io/inject": "true"}}}}}' 
 oc rollout latest dc/inventory-dotnet
 # Create the ingress gateway and virtual service for initial use
