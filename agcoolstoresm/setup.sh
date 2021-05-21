@@ -5,10 +5,28 @@
 # Install kiali into that project
 # Install Service Mesh Operator into istio-system
 # Create Control plane and Member roll
-oc new-project agcoolstoresm
 ##############
-# PLEASE manually Add agcoolstoresm into Service Mesh member roll
+# PLEASE manually Add <projectname> into Service Mesh member roll
 #
+# $1 = project name
+if test -z "$1" 
+then 
+  export SM_PROJECT=agcoolstoresm
+else
+  export SM_PROJECT=$1
+  oc new-project $SM_PROJECT
+  oc project $SM_PROJECT
+fi
+#
+# $2 = Service mesh project name
+if test -z "$2" 
+then 
+  export ISTIO_PROJECT=istio-system 
+else
+  export ISTIO_PROJECT=$2
+fi
+#
+echo "Using project:" $SM_PROJECT
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog \
 	 -l app=catalog,app.kubernetes.io/part-of=coolstore --as-deployment-config
 #
@@ -64,11 +82,12 @@ oc patch dc/inventory-dotnet --patch '{"spec": {"template": {"metadata": {"annot
 oc rollout latest dc/inventory-dotnet
 # Create the ingress gateway and virtual service for initial use
 oc create -f istio-gateway.yml
-oc create -f virtualservice.yml
+# modify the istio file so it is named to the current project
+sed s/agcoolstoresm/$SM_PROJECT/ virtualservice.yml | oc apply -f
 #
 # Tell the web server the new gateway location
 sleep 10
-export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')
-oc set env dc/web COOLSTORE_GW_ENDPOINT=http://$GATEWAY_URL/agcoolstoresm
+export GATEWAY_URL=$(oc -n $ISTIO_PROJECT get route istio-ingressgateway -o jsonpath='{.spec.host}')
+oc set env dc/web COOLSTORE_GW_ENDPOINT=http://$GATEWAY_URL/$SM_PROJECT
 oc rollout latest dc/web
 
