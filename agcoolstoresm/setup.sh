@@ -83,7 +83,7 @@ oc rollout latest dc/inventory-dotnet
 # Create the ingress gateway and virtual service for initial use
 oc create -f istio-gateway.yml
 # modify the istio file so it is named to the current project
-sed s/agcoolstoresm/$SM_PROJECT/ virtualservice.yml | oc apply -f
+sed s/agcoolstoresm/$SM_PROJECT/ virtualservice.yml | oc apply -f -
 #
 # Tell the web server the new gateway location
 sleep 10
