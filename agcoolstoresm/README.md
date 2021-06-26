@@ -14,7 +14,11 @@ in addtion, montioring services are installed to explore the component metrics a
 
 ## Scripts
 
-* Setup.sh loads all the elements needed to deploy the Coolstore app in a Service Mesh configuration
+* setup.sh loads all the elements needed to deploy the Coolstore app in a Service Mesh configuration
+``` 
+$ oc login ...
+$ ./setup.sh agcoolstoresm
+```
 * isto-gateway.yml defines the top level mesh entry point
 * virtualservice.yml defines the top level virtual service for inbound traffic and also the 50/50 traffic split for microservices
 * monitoring.sh installs the seperate monitoring components
@@ -23,9 +27,9 @@ in addtion, montioring services are installed to explore the component metrics a
 
 ## Manual Prereqs
 
-* Assumes OCP 4.4
+* Assumes OCP 4.4 onwards
 * Cluster operators for Elastic Search, Jaeger, Kiali and Service Mesh must be installed.
-* Service Mesh (as documented) should be further installed into the istio-system project where the control plane and service member roll are added.
+* Service Mesh (as documented) should be further installed into the `istio-system` project where the control plane and service member roll are added.
 * The name of the deployed project eg `agcoolstoresm` must be added to the member roll list.
 * Check that the allow-from-all-namspaces Network Policy is installed in the project
 * The istio ingress URL needs to be discovered and then used as the `COOLSTORE_GW_ENDPOINT` environment variable value for the web component
