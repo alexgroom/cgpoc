@@ -9,6 +9,34 @@ systemctl enable nfs-server
 #
 export nfshost=localhost
 mkdir -p pvs
+
+export volsize="50Gi"
+
+for volume in pv{21} ; do
+cat << EOF > pvs/${volume}
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": "${volume}"
+  },
+  "spec": {
+    "capacity": {
+        "storage": "${volsize}"
+    },
+    "accessModes": [ "ReadWriteMany" ],
+    "nfs": {
+        "path": "/var/pocfs/user-vols/${volume}",
+        "server": "${nfshost}"
+    },
+    "persistentVolumeReclaimPolicy": "Retain"
+  }
+}
+EOF
+echo "Created def file for ${volume}";
+done;
+#
+
 export volsize="10Gi"
 
 for volume in pv{11..20} ; do
