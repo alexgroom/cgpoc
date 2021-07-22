@@ -1,7 +1,9 @@
 #!/bin/bash
-mkdir -p /var/pocfs/user-vols/pv{1..20}
+mkdir -p /var/pocfs/user-vols/pv{1..21}
 echo "Creating PV for users.."
-for pvnum in {1..20} ; do   echo "/var/pocfs/user-vols/pv${pvnum} *(rw,root_squash)" >> /etc/exports.d/openshift-uservols.exports;   chown -R nfsnobody.nfsnobody /var/pocfs;   chmod -R 777 /var/pocfs; done
+for pvnum in {1..21} ; do   echo "/var/pocfs/user-vols/pv${pvnum} *(rw,root_squash)" >> /etc/exports.d/openshift-uservols.exports;  done
+chown -R nfsnobody.nfsnobody /var/pocfs
+chmod -R 777 /var/pocfs
 systemctl restart nfs-server
 #
 # make sure it starts at boot
