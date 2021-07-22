@@ -4,6 +4,9 @@ echo "Creating PV for users.."
 for pvnum in {1..20} ; do   echo "/var/pocfs/user-vols/pv${pvnum} *(rw,root_squash)" >> /etc/exports.d/openshift-uservols.exports;   chown -R nfsnobody.nfsnobody /var/pocfs;   chmod -R 777 /var/pocfs; done
 systemctl restart nfs-server
 #
+# make sure it starts at boot
+systemctl enable nfs-server
+#
 export nfshost=localhost
 mkdir -p pvs
 export volsize="10Gi"
