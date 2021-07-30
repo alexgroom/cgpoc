@@ -14,7 +14,7 @@ mkdir -p pvs
 
 export volsize="50Gi"
 
-for volume in pv{21} ; do
+for volume in pv{21..21} ; do
 cat << EOF > pvs/${volume}
 {
   "apiVersion": "v1",
