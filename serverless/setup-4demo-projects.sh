@@ -11,7 +11,7 @@ oc delete svc/web
 oc delete route web
 #
 # add web UI using the same image as was built for normal coolstore
-kn service create web --image=image-registry.openshift-image-registry.svc:5000/agcoolstore0/web \
+kn service create web --image=image-registry.openshift-image-registry.svc:5000/agcoolserve0/web \
   --label='app.openshift.io/runtime=nodejs' --label='app.kubernetes.io/part-of=coolstore' --label 'bindings.knative.dev/include=true'
 
 ./setup-noproject.sh agcoolserve2
