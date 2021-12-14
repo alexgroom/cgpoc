@@ -53,7 +53,8 @@ oc patch dc gateway -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/e
 oc patch dc catalog -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 oc patch dc inventory -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
 oc patch dc inventory-dotnet -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
-##
+oc patch dc web -p '{"spec":{"template":{"metadata":{"labels":{"maistra.io/expose-route":"true"}}}}}'
+#
 # Align the port names according to the service mesh Gateway
 #
 oc patch svc/inventory --patch '{"spec": { "ports": [{ "name":"http", "port":8080}]}}'
