@@ -5,7 +5,7 @@ $ ./setup-4demo-projects.sh
 
 To add the faas demo run 
 ```
-$ ./setup-coolserve5.sh agcoolserve4
+$ ./setup-coolserv5.sh agcoolserve4
 ```
 To add a "normal" coolstore deployment run
 ```
@@ -23,3 +23,16 @@ This should create
 - agcoolserve4 = optimised serverless with FaaS filter
 - agcoolstore = coolstore as normal
 
+These demos all use http to communicate. Knative Serving now supports mTLS which breaks things so suggest 
+this change to force http. https://docs.openshift.com/container-platform/4.8/serverless/serverless-release-notes.html
+
+You can override the default by adding the following YAML to your KnativeServing custom resource (CR):
+
+```
+...
+spec:
+  config:
+    network:
+      defaultExternalScheme: "http"
+...
+```
