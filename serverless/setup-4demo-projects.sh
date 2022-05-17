@@ -9,6 +9,10 @@ oc new-project agcoolserve0
 oc delete dc/web
 oc delete svc/web
 oc delete route web
+
+# add gateway route supporting TLS
+oc delete route gateway
+oc create route edge gateway --service=gateway --insecure-policy=Allow 
 #
 # add web UI using the same image as was built for normal coolstore
 kn service create web --image=image-registry.openshift-image-registry.svc:5000/agcoolserve0/web \
