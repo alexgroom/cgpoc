@@ -23,8 +23,10 @@ This should create
 - agcoolserve4 = optimised serverless with FaaS filter
 - agcoolstore = coolstore as normal
 
-These demos all use http to communicate. Knative Serving now supports mTLS which breaks things so suggest 
-this change to force http. https://docs.openshift.com/container-platform/4.8/serverless/serverless-release-notes.html
+These demos all uses a mix of http and https to communicate. Knative Serving now supports mTLS which is fine when working between 
+other KSVC but an edge route is required when talking to an ordinary gateway service. When there are no KSVC present, http is used.
+
+You can force Serverless to disable mTLS. https://docs.openshift.com/container-platform/4.8/serverless/serverless-release-notes.html
 
 You can override the default by adding the following YAML to your KnativeServing custom resource (CR):
 
