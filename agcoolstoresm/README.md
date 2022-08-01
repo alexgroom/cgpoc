@@ -14,11 +14,18 @@ in addtion, montioring services are installed to explore the component metrics a
 
 ## Scripts
 
-* setup.sh loads all the elements needed to deploy the Coolstore app in a Service Mesh configuration
+* setup.sh loads all the elements needed to deploy the Coolstore app in a Service Mesh configuration based around DeploymentConfigs
 ``` 
 $ oc login ...
 $ ./setup.sh agcoolstoresm
 ```
+
+* setup-deployment.sh uses Deployments instead
+``` 
+$ oc login ...
+$ ./setup-deployment.sh agcoolstoresm
+```
+
 * isto-gateway.yml defines the top level mesh entry point
 * virtualservice.yml defines the top level virtual service for inbound traffic and also the 50/50 traffic split for microservices
 * monitoring.sh installs the seperate monitoring components
@@ -80,5 +87,14 @@ Both components should be created with external routes.
 Note Grafana initial credentials are: `admin/admin`
 
 Components metrics are viewable at `http://service-name:8080/metrics`
+
+## Multi-tennant Istio
+OpenShift Service Mesh operator supports multi-tennant deployments of Istio. To deploy the app in this scenario you need to pass the 
+name of the local istio project as a parameter otherwise `istio-system` is assumed. eg:-
+
+``` 
+$ oc login ...
+$ ./setup-deployment.sh agcoolstoresm-user1 user1-istio
+```
 
 
