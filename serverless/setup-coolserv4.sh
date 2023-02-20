@@ -44,14 +44,12 @@ kn service update gateway --env COMPONENT_CATALOG_HOST=catalog-go.$SERVERLESS_PR
 # add trigger
 kn trigger create events-trigger4 --filter type=web-wakeup --sink ksvc:catalog-go
 #
-oc new-app mariadb-ephemeral \
-    --param=DATABASE_SERVICE_NAME=inventory-mariadb \
-    --param=MYSQL_DATABASE=inventorydb \
-    --param=MYSQL_USER=inventory \
-    --param=MYSQL_PASSWORD=inventory \
-    --labels=app=inventory \
-    --labels=app.openshift.io/runtime=mariadb \
-    --as-deployment-config
+oc process -n openshift mariadb-ephemeral --param=DATABASE_SERVICE_NAME=inventory-mariadb \
+        --param=MYSQL_DATABASE=inventorydb --param=MYSQL_USER=inventory \
+        --param=MYSQL_PASSWORD=inventory --param=MYSQL_ROOT_PASSWORD=inventoryadmin \
+        --labels=app=inventory \
+        --labels=app.openshift.io/runtime=mariadb \
+        | oc create -f -
 #
 # Update inventory service
 kn service create inventory --image=quay.io/agroom/inventory:latest \

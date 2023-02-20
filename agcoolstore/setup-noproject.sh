@@ -22,23 +22,21 @@ oc label dc inventory app.kubernetes.io/part-of=coolstore
 oc label dc web app.kubernetes.io/part-of=coolstore
 oc label dc inventory-dotnet app.kubernetes.io/part-of=coolstore
 # add databases components for inventory and catalog
-oc new-app mariadb-ephemeral \
-    --param=DATABASE_SERVICE_NAME=inventory-mariadb \
-    --param=MYSQL_DATABASE=inventorydb \
-    --param=MYSQL_USER=inventory \
-    --param=MYSQL_PASSWORD=inventory \
-    --labels=app=inventory \
-    --labels=app.openshift.io/runtime=mariadb \
-    --as-deployment-config
 #
-oc new-app postgresql-ephemeral \
-    --param=DATABASE_SERVICE_NAME=catalog-postgresql \
-    --param=POSTGRESQL_DATABASE=catalogdb \
-    --param=POSTGRESQL_USER=catalog \
-    --param=POSTGRESQL_PASSWORD=catalog \
-    --labels=app=catalog \
-    --labels=app.openshift.io/runtime=postgresql \
-    --as-deployment-config
+oc process -n openshift postgresql-ephemeral --param=DATABASE_SERVICE_NAME=catalog-postgresql \
+        --param=POSTGRESQL_DATABASE=catalogdb --param=POSTGRESQL_USER=catalog \
+        --param=POSTGRESQL_PASSWORD=catalog \
+        --labels=app=catalog \
+        --labels=app.openshift.io/runtime=postgresql \
+          | oc create -f -
+
+oc process -n openshift mariadb-ephemeral --param=DATABASE_SERVICE_NAME=inventory-mariadb \
+        --param=MYSQL_DATABASE=inventorydb --param=MYSQL_USER=inventory \
+        --param=MYSQL_PASSWORD=inventory --param=MYSQL_ROOT_PASSWORD=inventoryadmin \
+        --labels=app=inventory \
+        --labels=app.openshift.io/runtime=mariadb \
+        | oc create -f -
+
 # modift config maps
 cat <<EOF > catalog-application.properties
 spring.datasource.url=jdbc:postgresql://catalog-postgresql:5432/catalogdb
