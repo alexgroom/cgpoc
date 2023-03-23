@@ -40,7 +40,7 @@ oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-v
 oc new-app https://github.com/alexgroom/cnw3.git --context-dir=web-nodejs --name=web \
 	-l app=web,app.kubernetes.io/part-of=coolstore 
 #
-oc new-app dotnet:3.1~https://github.com/alexgroom/inventory-api-1st-dotnet.git --context-dir=src/Coolstore.Inventory --name=inventory-dotnet \
+oc new-app dotnet:6.0~https://github.com/alexgroom/inventory-api-1st-dotnet.git --context-dir=src/Coolstore.Inventory --name=inventory-dotnet \
   -l app=inventory-dotnet,app.kubernetes.io/part-of=coolstore 
 # configure dev console labels
 oc label deployment gateway app.openshift.io/runtime=vertx

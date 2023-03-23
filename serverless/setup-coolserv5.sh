@@ -21,7 +21,7 @@ kn service create web --image=image-registry.openshift-image-registry.svc:5000/$
   --label='app.openshift.io/runtime=nodejs' --label='app.kubernetes.io/part-of=coolstore' --label 'bindings.knative.dev/include=true'
 
 # create dotnet gateway and apply environment variables
-oc new-build dotnet:3.1~https://github.com/alexgroom/cnw3.git --context-dir=gateway-dotnet --name=gateway
+oc new-build dotnet:6.0~https://github.com/alexgroom/cnw3.git --context-dir=gateway-dotnet --name=gateway
 kn service create gateway --image=image-registry.openshift-image-registry.svc:5000/$SERVERLESS_PROJECT/gateway \
   --label='app.openshift.io/runtime=dotnet' --label='app.kubernetes.io/part-of=coolstore' \
    --env COMPONENT_CATALOG_HOST=catalog.$SERVERLESS_PROJECT.svc.cluster.local --env COMPONENT_INVENTORY_HOST=inventory.$SERVERLESS_PROJECT.svc.cluster.local \
