@@ -2,8 +2,11 @@
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  -l app.openshift.io/runtime=spring --as-deployment-config
 oc expose svc catalog
 #
-# Take the maria branch of inventory simce it support db access
-oc new-app java:11~https://github.com/alexgroom/cnw3.git#maria --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=quarkus --as-deployment-config
+# Build the inventory variant usig the external mariadb
+oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=quarkus --as-deployment-config \
+  --build-env=QUARKUS_DATASOURCE_DB_KIND=mariadb --build-env=QUARKUS_DATASOURCE_JDBC_URL=jdbc:mariadb://inventory-mariadb:3306/inventorydb \
+  --build-env=QUARKUS_DATASOURCE_USERNAME=inventory --build-env=QUARKUS_DATASOURCE_PASSWORD=inventory
+
 oc expose svc inventory
 # create gateway and apply environment variables
 oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway --as-deployment-config\

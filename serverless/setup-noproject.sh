@@ -15,7 +15,6 @@ oc new-build java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog
 kn service create catalog --image=image-registry.openshift-image-registry.svc:5000/$SERVERLESS_PROJECT/catalog \
   --label='app.openshift.io/runtime=spring' --label='app.kubernetes.io/part-of=coolstore'
 #
-# Take the maria branch of inventory simce it support db access
 oc new-build java:11~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  
 kn service create inventory --image=image-registry.openshift-image-registry.svc:5000/$SERVERLESS_PROJECT/inventory \
   --label='app.openshift.io/runtime=quarkus' --label='app.kubernetes.io/part-of=coolstore'

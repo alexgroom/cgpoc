@@ -14,7 +14,6 @@ fi
 echo "Using project:" $SERVERLESS_PROJECT
 
 #
-# Take the maria branch of inventory simce it support db access
 # add web UI
 oc new-build https://github.com/alexgroom/cnw3.git --context-dir=web-nodejs --name=web 
 kn service create web --image=image-registry.openshift-image-registry.svc:5000/$SERVERLESS_PROJECT/web \
