@@ -27,13 +27,13 @@ else
 fi
 #
 echo "Using project:" $SM_PROJECT
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog \
+oc new-app java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog \
 	 -l app=catalog,app.kubernetes.io/part-of=coolstore 
 #
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  \
+oc new-app java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  \
 	-l app=inventory,app.kubernetes.io/part-of=coolstore 
 # create gateway and apply environment variables
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway \
+oc new-app java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway \
    -l app=gateway,app.kubernetes.io/part-of=coolstore\
   -e COMPONENT_CATALOG_HOST=catalog -e COMPONENT_INVENTORY_HOST=inventory -e COMPONENT_CATALOG_PORT=8080 -e COMPONENT_INVENTORY_PORT=8080
 #

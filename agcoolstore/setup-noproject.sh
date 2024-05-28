@@ -1,15 +1,15 @@
 # script to install agcoolstore components
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  -l app.openshift.io/runtime=spring 
+oc new-app java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  -l app.openshift.io/runtime=spring 
 oc expose svc catalog
 #
 # Build the inventory variant usig the external mariadb
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=quarkus  \
+oc new-app java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  -l app.openshift.io/runtime=quarkus  \
   --build-env=QUARKUS_DATASOURCE_DB_KIND=mariadb --build-env=QUARKUS_DATASOURCE_JDBC_URL=jdbc:mariadb://inventory-mariadb:3306/inventorydb \
   --build-env=QUARKUS_DATASOURCE_USERNAME=inventory --build-env=QUARKUS_DATASOURCE_PASSWORD=inventory
 
 oc expose svc inventory
 # create gateway and apply environment variables
-oc new-app java:11~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway \
+oc new-app java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=gateway-vertx --name=gateway \
    -l app.openshift.io/runtime=vertx \
   -e COMPONENT_CATALOG_HOST=catalog -e COMPONENT_INVENTORY_HOST=inventory -e COMPONENT_CATALOG_PORT=8080 -e COMPONENT_INVENTORY_PORT=8080
 oc expose svc gateway

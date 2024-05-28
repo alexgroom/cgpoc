@@ -11,11 +11,11 @@ fi
 #
 echo "Using project:" $SERVERLESS_PROJECT
 #
-oc new-build java:11~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  
+oc new-build java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=catalog-spring-boot --name=catalog  
 kn service create catalog --image=image-registry.openshift-image-registry.svc:5000/$SERVERLESS_PROJECT/catalog \
   --label='app.openshift.io/runtime=spring' --label='app.kubernetes.io/part-of=coolstore'
 #
-oc new-build java:11~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  
+oc new-build java:openjdk-17-ubi8~https://github.com/alexgroom/cnw3.git --context-dir=inventory-quarkus --name=inventory  
 kn service create inventory --image=image-registry.openshift-image-registry.svc:5000/$SERVERLESS_PROJECT/inventory \
   --label='app.openshift.io/runtime=quarkus' --label='app.kubernetes.io/part-of=coolstore'
 # add web UI
