@@ -32,15 +32,16 @@ oc process  --param=DATABASE_SERVICE_NAME=catalog-postgresql \
         --param=POSTGRESQL_DATABASE=catalogdb --param=POSTGRESQL_USER=catalog \
         --param=POSTGRESQL_PASSWORD=catalog \
         --labels=app=catalog \
-        --labels=app.openshift.io/runtime=postgresql \
+        --labels=app.openshift.io/runtime=postgresql -f -\
           | oc create -f -
+
 
 oc get template -n openshift mariadb-ephemeral  -o yaml | sed "s/namespace: openshift/namespace: ${PROJECT_NAME}/" | \
 oc process  --param=DATABASE_SERVICE_NAME=inventory-mariadb \
         --param=MYSQL_DATABASE=inventorydb --param=MYSQL_USER=inventory \
         --param=MYSQL_PASSWORD=inventory --param=MYSQL_ROOT_PASSWORD=inventoryadmin \
         --labels=app=inventory \
-        --labels=app.openshift.io/runtime=mariadb \
+        --labels=app.openshift.io/runtime=mariadb -f -\
         | oc create -f -
 
 # modift config maps
